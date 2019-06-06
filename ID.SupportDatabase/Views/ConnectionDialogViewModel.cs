@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlClient;
@@ -16,6 +17,7 @@ namespace ID.SupportDatabase.Views
     public class ConnectionDialogViewModel : INotifyPropertyChanged
     {
         private const string StorageFileName = "id-support-connections";
+        private IStorageService _storageService;
 
         #region Properies
 
@@ -75,48 +77,59 @@ namespace ID.SupportDatabase.Views
 
         public ConnectionDialogViewModel(IStorageService storageService)
         {
+            _storageService = storageService;
+
             // Load connections from storage
-            Connections = new ObservableCollection<Connection>(storageService.Load<ObservableCollection<Connection>>(StorageFileName));
+            var connections = _storageService.Load<ObservableCollection<Connection>>(StorageFileName);
+            Connections = connections ?? new ObservableCollection<Connection>();
 
-            ConnectCommand = new RelayCommand<dynamic>(async form =>
-            {
-                // Update password
-                if (!string.IsNullOrEmpty(form.password.Password))
-                    CurrentConnection.Password = form.password.Password;
+            ConnectCommand = new RelayCommand<dynamic>(ExecuteConnectCommand, CanExecuteConnectCommand);
 
-                // Check connection
-                if (!await CheckConnection(CurrentConnection))
-                    return;
+            DeleteCommand = new RelayCommand<Connection>(ExecuteDeleteCommand);
+        }
 
-                // Update connection list
-                if (!_connections.Contains(CurrentConnection))
-                    _connections.Add(CurrentConnection);
-                else
-                {
-                    // if connection exist, then check and update, if needed, password
-                    var replaceConnection = _connections.First();
-                    if (!CurrentConnection.Password.Equals(replaceConnection.Password))
-                        replaceConnection.Password = CurrentConnection.Password;
-                }
-
-                // Save connections in storage
-                storageService.Save(StorageFileName, _connections);
-
-                form.window.DialogResult = true;
-                form.window.Close();
-
-            }/*, form => !string.IsNullOrEmpty(CurrentConnection.DataSource)
+        private bool CanExecuteConnectCommand(dynamic form)
+        {
+            return !string.IsNullOrEmpty(CurrentConnection.DataSource)
                        && !string.IsNullOrEmpty(CurrentConnection.Catalog)
                        && !string.IsNullOrEmpty(CurrentConnection.UserId)
-                       && !CheckInProgress*/);
+                       && !CheckInProgress;
+        }
 
-            DeleteCommand = new RelayCommand<Connection>(connection =>
+        private async void ExecuteConnectCommand(dynamic form)
+        {
+            // Update password
+            if (!string.IsNullOrEmpty(form.password.Password))
+                CurrentConnection.Password = form.password.Password;
+
+            // Check connection
+            if (!await CheckConnection(CurrentConnection))
+                return;
+
+            // Update connection list
+            if (!_connections.Contains(CurrentConnection))
+                _connections.Add(CurrentConnection);
+            else
             {
-                Connections.Remove(connection);
-                OnPropertyChanged(nameof(Connections));
+                // if connection exist, then check and update, if needed, password
+                var replaceConnection = _connections.First();
+                if (!CurrentConnection.Password.Equals(replaceConnection.Password))
+                    replaceConnection.Password = CurrentConnection.Password;
+            }
 
-                storageService.Save(StorageFileName, _connections);
-            });
+            // Save connections in storage
+            _storageService.Save(StorageFileName, _connections);
+
+            form.window.DialogResult = true;
+            form.window.Close();
+        }
+
+        private void ExecuteDeleteCommand(Connection connection)
+        {
+            Connections.Remove(connection);
+            OnPropertyChanged(nameof(Connections));
+
+            _storageService.Save(StorageFileName, _connections);
         }
 
         private async Task<bool> CheckConnection(Connection connection)
