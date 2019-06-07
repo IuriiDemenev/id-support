@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.IO.IsolatedStorage;
 using System.Runtime.Serialization.Formatters.Binary;
+using Microsoft.Extensions.Logging;
 
 namespace ID.SupportDatabase.Services
 {
@@ -12,6 +13,13 @@ namespace ID.SupportDatabase.Services
 
     public class IsolatedStorageService : IStorageService
     {
+        private readonly ILogger<IsolatedStorageService> _logger;
+
+        public IsolatedStorageService(ILogger<IsolatedStorageService> logger)
+        {
+            _logger = logger;
+        }
+
         public void Save(string name, object value)
         {
             var isoStorage = GetStorage();
@@ -24,6 +32,7 @@ namespace ID.SupportDatabase.Services
 
                 stream.Close();
             }
+            _logger.LogInformation($"object {name} saved in isolated storage");
         }
 
         public T Load<T>(string name)
@@ -49,6 +58,7 @@ namespace ID.SupportDatabase.Services
 
                 stream.Close();
             }
+            _logger.LogInformation($"object {name} loaded from isolated storage");
 
             return result;
         }

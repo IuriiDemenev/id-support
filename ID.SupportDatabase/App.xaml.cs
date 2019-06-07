@@ -3,6 +3,7 @@ using System.Windows;
 using ID.SupportDatabase.Services;
 using ID.SupportDatabase.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ID.SupportDatabase
 {
@@ -31,9 +32,15 @@ namespace ID.SupportDatabase
             ShutdownMode = ShutdownMode.OnMainWindowClose;
         }
 
-        private IServiceProvider BuildProvider()
+        private static IServiceProvider BuildProvider()
         {
             var serivces = new ServiceCollection();
+            serivces.AddLogging(builder =>
+            {
+                builder.AddDebug();
+                builder.SetMinimumLevel(LogLevel.Debug);
+            });
+
             serivces.AddTransient<IStorageService, IsolatedStorageService>();
             serivces.AddSingleton<ConnectionDialogViewModel>();
 

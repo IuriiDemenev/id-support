@@ -22,17 +22,18 @@ namespace ID.SupportDatabase.Models
 
         public bool Equals(Connection other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (null == other) return false;
             if (ReferenceEquals(this, other)) return true;
+
             return string.Equals(DataSource, other.DataSource) && string.Equals(Catalog, other.Catalog) && string.Equals(UserId, other.UserId);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (null == obj) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Connection) obj);
+
+            return obj.GetType() == GetType() && Equals((Connection) obj);
         }
 
         public override int GetHashCode()

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.SqlClient;
@@ -11,13 +10,15 @@ using GalaSoft.MvvmLight.CommandWpf;
 using ID.SupportDatabase.Annotations;
 using ID.SupportDatabase.Models;
 using ID.SupportDatabase.Services;
+using Microsoft.Extensions.Logging;
 
 namespace ID.SupportDatabase.Views
 {
     public class ConnectionDialogViewModel : INotifyPropertyChanged
     {
         private const string StorageFileName = "id-support-connections";
-        private IStorageService _storageService;
+        private readonly ILogger<ConnectionDialogViewModel> _logger;
+        private readonly IStorageService _storageService;
 
         #region Properies
 
@@ -75,8 +76,9 @@ namespace ID.SupportDatabase.Views
         public ICommand ConnectCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
 
-        public ConnectionDialogViewModel(IStorageService storageService)
+        public ConnectionDialogViewModel(ILogger<ConnectionDialogViewModel> logger, IStorageService storageService)
         {
+            _logger = logger;
             _storageService = storageService;
 
             // Load connections from storage
@@ -91,9 +93,9 @@ namespace ID.SupportDatabase.Views
         private bool CanExecuteConnectCommand(dynamic form)
         {
             return !string.IsNullOrEmpty(CurrentConnection.DataSource)
-                       && !string.IsNullOrEmpty(CurrentConnection.Catalog)
-                       && !string.IsNullOrEmpty(CurrentConnection.UserId)
-                       && !CheckInProgress;
+                   && !string.IsNullOrEmpty(CurrentConnection.Catalog)
+                   && !string.IsNullOrEmpty(CurrentConnection.UserId)
+                   && !CheckInProgress;
         }
 
         private async void ExecuteConnectCommand(dynamic form)
@@ -129,6 +131,8 @@ namespace ID.SupportDatabase.Views
             Connections.Remove(connection);
             OnPropertyChanged(nameof(Connections));
 
+            _logger.LogInformation($"Connection {BuildConnectionString(connection)} delete");
+
             _storageService.Save(StorageFileName, _connections);
         }
 
@@ -143,25 +147,22 @@ namespace ID.SupportDatabase.Views
             Error = string.Empty;
             CheckInProgress = true;
 
-            var connectionBuilder = new SqlConnectionStringBuilder
-            {
-                DataSource = connection.DataSource,
-                InitialCatalog = connection.Catalog,
-                UserID = connection.UserId,
-                Password = connection.Password
-            };
+            var connectionBuilder = BuildConnectionString(connection);
 
             try
             {
-                using (var sqlconnection = new SqlConnection(connectionBuilder.ToString()))
+                using (var sqlconnection = new SqlConnection(connectionBuilder))
                 {
                     await sqlconnection.OpenAsync();
 
                     sqlconnection.Close();
                 }
+                _logger.LogInformation($"Check connection {connectionBuilder} success");
             }
             catch (Exception ex)
             {
+                _logger.LogInformation($"Check connection {connectionBuilder} error");
+                _logger.LogError(ex, ex.Message);
                 Error = ex.Message;
                 return false;
             }
@@ -171,6 +172,17 @@ namespace ID.SupportDatabase.Views
             }
 
             return true;
+        }
+
+        private static string BuildConnectionString(Connection connection)
+        {
+            return new SqlConnectionStringBuilder
+            {
+                DataSource = connection.DataSource,
+                InitialCatalog = connection.Catalog,
+                UserID = connection.UserId,
+                Password = connection.Password
+            }.ToString();
         }
         
         public event PropertyChangedEventHandler PropertyChanged;
