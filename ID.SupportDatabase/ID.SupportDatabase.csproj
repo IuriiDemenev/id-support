@@ -136,11 +136,11 @@
     <Compile Include="Models\Connection.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\StorageService.cs" />
-    <Compile Include="Views\ConnectionDialog.xaml.cs">
+    <Compile Include="Views\Connections\ConnectionDialog.xaml.cs">
       <DependentUpon>ConnectionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ConnectionDialogConverter.cs" />
-    <Compile Include="Views\ConnectionDialogViewModel.cs" />
+    <Compile Include="Views\Connections\ConnectionDialogConverter.cs" />
+    <Compile Include="Views\Connections\ConnectionDialogViewModel.cs" />
     <Compile Include="Views\RootWindow.xaml.cs">
       <DependentUpon>RootWindow.xaml</DependentUpon>
     </Compile>
@@ -174,7 +174,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Page Include="Views\ConnectionDialog.xaml">
+    <Page Include="Views\Connections\ConnectionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

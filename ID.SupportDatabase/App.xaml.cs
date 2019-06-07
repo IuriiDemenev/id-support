@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using ID.SupportDatabase.Services;
-using ID.SupportDatabase.Views;
+using ID.SupportDatabase.Views.Connections;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

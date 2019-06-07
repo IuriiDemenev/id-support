@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace ID.SupportDatabase.Views
+namespace ID.SupportDatabase.Views.Connections
 {
     public class ConnectionDialogConverter : IMultiValueConverter
     {

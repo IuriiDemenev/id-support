@@ -1,16 +1,16 @@
-﻿<Window x:Class="ID.SupportDatabase.Views.ConnectionDialog"
+﻿<Window x:Class="ID.SupportDatabase.Views.Connections.ConnectionDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        d:DataContext="{d:DesignInstance Type={x:Type views:ConnectionDialogViewModel}, IsDesignTimeCreatable=False}" 
+        d:DataContext="{d:DesignInstance Type={x:Type connections:ConnectionDialogViewModel}, IsDesignTimeCreatable=False}" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:views="clr-namespace:ID.SupportDatabase.Views"
+        xmlns:connections="clr-namespace:ID.SupportDatabase.Views.Connections"
         mc:Ignorable="d"
         Title="Connections" Height="330" Width="600" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
-            <views:ConnectionDialogConverter x:Key="ConnectionDialogConverter"/>
+            <connections:ConnectionDialogConverter x:Key="ConnectionDialogConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -74,7 +74,7 @@
                                     Foreground="{StaticResource PrimaryHueDarkBrush}"
                                     Height="18"
                                     Padding="2 0 2 0"
-                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:ConnectionDialog}}}"
+                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type connections:ConnectionDialog}}}"
                                     CommandParameter="{Binding}">
                                     <materialDesign:PackIcon Kind="Delete" />
                                 </Button>

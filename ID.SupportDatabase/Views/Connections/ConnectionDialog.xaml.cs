@@ -1,4 +1,4 @@
-﻿namespace ID.SupportDatabase.Views
+﻿namespace ID.SupportDatabase.Views.Connections
 {
     public partial class ConnectionDialog
     {

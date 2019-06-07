@@ -12,7 +12,7 @@ using ID.SupportDatabase.Models;
 using ID.SupportDatabase.Services;
 using Microsoft.Extensions.Logging;
 
-namespace ID.SupportDatabase.Views
+namespace ID.SupportDatabase.Views.Connections
 {
     public class ConnectionDialogViewModel : INotifyPropertyChanged
     {
