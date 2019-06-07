@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:connections="clr-namespace:ID.SupportDatabase.Views.Connections"
         mc:Ignorable="d"
-        Title="Connections" Height="330" Width="600" ResizeMode="NoResize">
+        Title="{DynamicResource ConnectionTitle}" Height="330" Width="600" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
             <connections:ConnectionDialogConverter x:Key="ConnectionDialogConverter"/>
@@ -29,7 +29,7 @@
         </materialDesign:ColorZone>
         <Button 
             Grid.Row="0"
-            Content="Connect" 
+            Content="{DynamicResource ConnectionButtonConnect}" 
             HorizontalAlignment="Right" 
             VerticalAlignment="Bottom" 
             Margin="0 0 20 -15" 
@@ -49,7 +49,7 @@
             </Grid.ColumnDefinitions>
             <GroupBox
                 Grid.Column="0"
-                Header="RECENTS"
+                Header="{DynamicResource ConnectionTitleRecents}"
                 Style="{DynamicResource MaterialDesignGroupBox}"
                 Margin="5"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1"
@@ -85,7 +85,7 @@
             </GroupBox>
             <GroupBox
                 Grid.Column="1"
-                Header="CONNECTION"
+                Header="{DynamicResource ConnectionTitleConnection}"
                 Style="{DynamicResource MaterialDesignGroupBox}"
                 Margin="5"
                 materialDesign:ShadowAssist.ShadowDepth="Depth1"
@@ -99,10 +99,10 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <TextBox Grid.Row="0" Text="{Binding CurrentConnection.DataSource, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="Server" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox Grid.Row="1" Text="{Binding CurrentConnection.Catalog, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="Initial catalog" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBox Grid.Row="2" Text="{Binding CurrentConnection.UserId, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="User ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <PasswordBox x:Name="passwordBox" Grid.Row="3" materialDesign:HintAssist.Hint="Password" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" />
+                    <TextBox Grid.Row="0" Text="{Binding CurrentConnection.DataSource, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="{DynamicResource ConnectionFieldServer}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Row="1" Text="{Binding CurrentConnection.Catalog, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="{DynamicResource ConnectionFieldInitialcatalog}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Row="2" Text="{Binding CurrentConnection.UserId, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="{DynamicResource ConnectionFieldUserID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <PasswordBox x:Name="passwordBox" Grid.Row="3" materialDesign:HintAssist.Hint="{DynamicResource ConnectionFieldPassword}" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" />
 
                     <TextBlock Grid.Row="4" Margin="0,5,0,0" MaxHeight="50" TextWrapping="Wrap" Text="{Binding Error}" Style="{StaticResource MaterialDesignCaptionTextBlock}"/>
                 </Grid>
